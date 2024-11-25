@@ -26,12 +26,15 @@
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Expands the web app to fullscreen
 
-        document.getElementById("sendData").addEventListener("click", () => {
-            // Send data back to the bot
-            tg.sendData(JSON.stringify({ message: "Hello from Web App!" }));
-        });
+		tg.expand(); // Expands the web app to fullscreen
+
+		document.getElementById("sendData").addEventListener("click", () => {
+			const data = { message: "Hello from Web App!" };
+			tg.sendData(JSON.stringify(data)); // Send data back to the bot
+			alert("Data sent to the bot: " + JSON.stringify(data));
+		});
+
     </script>
 </body>
 </html>
