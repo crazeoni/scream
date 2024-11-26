@@ -20,7 +20,7 @@
 <body>
     <h1>Welcome to Telegram Web App</h1>
     <p>Interact and send data back to the bot!</p>
-    <button id="sendData">Send Data</button>
+    <button id="sendData">Send mData</button>
 
     <script>
         const tg = window.Telegram.WebApp;
@@ -31,7 +31,7 @@
             const data = { message: "Data from Web App", username: tg.initDataUnsafe.user.username };
 
             // Send data to your API endpoint
-            const response = await fetch("https://your-api-endpoint.com/api/send-data", {
+            const response = await fetch("https://telegram-mini-app-7nu1.onrender.com/api/send-data", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
