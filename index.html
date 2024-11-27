@@ -3,54 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Inline Web App</title>
+    <title>Tapping Game</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            padding: 20px;
+            background-color: #333;
+            color: #fff;
         }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
+        .controller {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 50px auto;
+            background: #555;
+            border-radius: 50%;
+        }
+        .button {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: red;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .x-button {
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
         }
     </style>
 </head>
 <body>
-    <h1>Welcome to Telegram Web App</h1>
-    <p>Interact and send data back to the bot!</p>
-    <button id="sendData">Send mData</button>
+    <h1>Start Mining!</h1>
+    <div class="controller">
+        <div class="button x-button" id="mineButton"></div>
+    </div>
+    <p id="status">Tap X to start mining!</p>
 
     <script>
         const tg = window.Telegram.WebApp;
-tg.expand(); // Expand to fullscreen
+        tg.expand();
 
-document.getElementById("sendData").addEventListener("click", async () => {
-    // Extracting chat_id and username
-    const data = {
-        message: "Data from Web App",
-        username: tg.initDataUnsafe.user.username,
-        chat_id: tg.initDataUnsafe.user.id, // Pass chat_id dynamically
-    };
+        document.getElementById("mineButton").addEventListener("click", async () => {
+            const response = await fetch("/api/mine", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    chat_id: tg.initDataUnsafe.user.id,
+                    username: tg.initDataUnsafe.user.username,
+                }),
+            });
 
-    // Send data to your API endpoint
-    const response = await fetch("https://telegram-mini-app-7nu1.onrender.com/api/send-data", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-    });
-
-    if (response.ok) {
-        const result = await response.json();
-        tg.close(); // Close Web App on success
-        alert(result.message); // Notify user
-    } else {
-        alert("Failed to send data!");
-    }
-});
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById("status").innerText = `${data.message} Balance: ${data.balance}`;
+            } else {
+                const error = await response.json();
+                document.getElementById("status").innerText = error.error;
+            }
+        });
     </script>
 </body>
 </html>
