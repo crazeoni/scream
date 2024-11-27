@@ -65,11 +65,11 @@ async function fetchTasks() {
         .map(
             (task) => 
         '<div class="task">' +
-            '<p>${task.title} - Reward: ${task.reward} points</p>' +
-            '<button onclick="completeTask(${task.id})" ${' +
-                'task.completed ? "disabled" : ""' +
-            '}>${task.completed ? "Completed" : "Complete Task"}</button>' +
-        '</div>' +
+        '<p>'${task.title} - Reward: ${task.reward} points'</p>' +
+        '<button 'onclick="completeTask(${task.id})" ${task.completed ? "disabled" : ""}'>' +
+            ${task.completed ? "Completed" : "Complete Task"} +
+        '</button>' +
+    '</div>'
         )
         .join("");
 }
