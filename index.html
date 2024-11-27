@@ -56,106 +56,52 @@ document.getElementById("sendData").addEventListener("click", async () => {
     }
 });
 
-// Fetch and display tasks
+// Fetch tasks and display them
         async function fetchTasks() {
-            // Replace with dynamic fetching from your backend
-            const tasks = [
-                { 
-                    "id": 1, 
-                    "title": "Follow us on Twitter", 
-                    "reward": 500, 
-                    "completed": false,
-                    "links": [
-                        "https://x.com/mid3e?task_id=1",
-                        "https://x.com/mid3e?task_id=1&type=details",
-                        "https://x.com/mid3e?task_id=1&action=complete"
-                    ]
-                },
-                { 
-                    "id": 2, 
-                    "title": "Join our Telegram Channel", 
-                    "reward": 700, 
-                    "completed": false,
-                    "links": [
-                        "https://t.me/officialscream?task_id=2",
-                        "https://t.me/officialscream?task_id=2&type=details",
-                        "https://t.me/officialscream?task_id=2&action=complete"
-                    ]
-                },
-                { 
-                    "id": 3, 
-                    "title": "Claim your first NFT", 
-                    "reward": 1000, 
-                    "completed": false,
-                    "links": [
-                        "https://t.me/screambot?task_id=3",
-                        "https://t.me/screambot?task_id=3&type=details",
-                        "https://t.me/screambot?task_id=3&action=complete"
-                    ]
-                },
-            ];
-            const taskList = document.getElementById("taskList");
-            taskList.innerHTML = tasks
-                .map((task) => 
+            const response = await fetch("https://telegram-mini-app-7nu1.onrender.com/api/tasks");
+            if (response.ok) {
+                const tasks = await response.json();
+                const taskList = document.getElementById("taskList");
+                taskList.innerHTML = tasks.map(task => 
                     '<div class="task">' +
-                '<p>' +
-                '<strong>' + task.title + '</strong> - Reward: ' + task.reward + ' points' +
-                '</p>' +
-                '<p>' +
-                '</p>' +
-                '<button onclick="completeTask(' + task.id + ', \'' + task.links[0] + '\')" ' +
-                (task.completed ? 'disabled' : '') +
-                '>' +
+        '<p><strong>' + task.title + '</strong> - Reward: ' + task.reward + ' points</p>' +
+        '<a href="' + task.url + '" target="_blank">' +
+            '<button ' + (task.completed ? 'disabled' : '') + '>' +
                 (task.completed ? 'Completed' : 'Open Task and Complete') +
-                '</button>' +
-                '</div>'
-
-                )
-                .join("");
+            '</button>' +
+        '</a>' +
+    '</div>'
+                ).join("");
+            } else {
+                alert("Failed to fetch tasks!");
+            }
         }
 
         // Complete a task
-        async function completeTask(taskId, taskLink) {
-    const tg = window.Telegram.WebApp; // Get Telegram WebApp object
-    const data = {
-        task_id: taskId,
-        chat_id: tg.initDataUnsafe.user.id, // Extract user's chat ID
-    };
+        async function completeTask(taskId) {
+            const data = {
+                task_id: taskId,
+                chat_id: tg.initDataUnsafe.user.id // User's chat ID from Telegram
+            };
 
-    const taskButton = event.target; // Get the clicked button
-    const taskLinkElement = document.getElementById("taskLink"); // Get the task link element
+            const response = await fetch("https://telegram-mini-app-7nu1.onrender.com/api/tasks/complete", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
 
-    // If the task is not completed yet
-    if (!taskButton.disabled) {
-        // Open the task link
-        window.open(taskLink, '_blank');
-
-        // Disable the button after the first click to prevent reopening
-        taskButton.disabled = true;
-        taskButton.textContent = 'Completed'; // Change the button text to 'Completed'
-
-        // Send the completion request for rewarding
-        const response = await fetch("https://telegram-mini-app-7nu1.onrender.com/api/tasks/complete", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-        });
-
-        if (response.ok) {
-            const result = await response.json();
-            alert(result.message);
-            fetchTasks(); // Refresh task list
-            fetchRewards(); // Update reward balance
-        } else {
-            alert("Failed to complete task!");
+            if (response.ok) {
+                const result = await response.json();
+                alert(result.message);
+                fetchTasks(); // Refresh the task list
+                fetchRewards(); // Update reward balance
+            } else {
+                alert("Failed to complete the task!");
+            }
         }
-    }
-}
 
-
-        // Fetch rewards and update the UI
+        // Fetch reward balance
         async function fetchRewards() {
-            const tg = window.Telegram.WebApp;
             const response = await fetch(`https://telegram-mini-app-7nu1.onrender.com/api/get-balance?chat_id=${tg.initDataUnsafe.user.id}`);
             if (response.ok) {
                 const balance = await response.json();
