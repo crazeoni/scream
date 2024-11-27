@@ -98,18 +98,17 @@ document.getElementById("sendData").addEventListener("click", async () => {
             taskList.innerHTML = tasks
                 .map((task) => 
                     '<div class="task">' +
-    '<p>' +
-        '<strong>' + task.title + '</strong> - Reward: ' + task.reward + ' points' +
-    '</p>' +
-    '<p>' +
-        '<a href="' + task.links[0] + '" target="_blank" id="taskLink" style="display:none;">Task Link</a>' +
-    '</p>' +
-    '<button onclick="completeTask(' + task.id + ', \'' + task.links[0] + '\')" ' +
-        (task.completed ? 'disabled' : '') +
-    '>' +
-        (task.completed ? 'Completed' : 'Open Task and Complete') +
-    '</button>' +
-'</div>'
+                '<p>' +
+                '<strong>' + task.title + '</strong> - Reward: ' + task.reward + ' points' +
+                '</p>' +
+                '<p>' +
+                '</p>' +
+                '<button onclick="completeTask(' + task.id + ', \'' + task.links[0] + '\')" ' +
+                (task.completed ? 'disabled' : '') +
+                '>' +
+                (task.completed ? 'Completed' : 'Open Task and Complete') +
+                '</button>' +
+                '</div>'
 
                 )
                 .join("");
