@@ -68,7 +68,7 @@ async function fetchTasks() {
             '<p>'${task.title}' - Reward: '${task.reward}' points</p>' +
             '<button onclick="completeTask('${task.id}')" '${
                 task.completed ? "disabled" : ""
-            }'>'${task.completed ? "Completed" : "Complete Task"}'</button>'
+            }'>'${task.completed ? "Completed" : "Complete Task"}'</button>'+
         '</div>'
         )
         .join("");
