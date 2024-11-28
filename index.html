@@ -24,7 +24,20 @@
     
     <h1>Task Management</h1>
     <h3 id="rewardBalance">Rewards: 0 points</h3>
-    <div id="taskList"></div>
+    
+    
+    <div class="tabs">
+        <div id="homeTab" class="tab active-tab">Home</div>
+        <div id="leaderboardTab" class="tab">Leaderboard</div>
+    </div>
+
+    <!-- Content for each tab -->
+    <div id="homeContent" class="tab-content active-content">
+        <div id="taskList"></div>
+    </div>
+    <div id="leaderboardContent" class="tab-content">
+        <div id="leaderboardList"></div>
+    </div>
 
     <script>
         const tg = window.Telegram.WebApp;
@@ -56,6 +69,22 @@ document.getElementById("sendData").addEventListener("click", async () => {
     }
 });
 
+// Switch between tabs
+        document.getElementById("homeTab").addEventListener("click", () => {
+            document.getElementById("homeContent").classList.add("active-content");
+            document.getElementById("leaderboardContent").classList.remove("active-content");
+            document.getElementById("homeTab").classList.add("active-tab");
+            document.getElementById("leaderboardTab").classList.remove("active-tab");
+        });
+
+        document.getElementById("leaderboardTab").addEventListener("click", () => {
+            document.getElementById("leaderboardContent").classList.add("active-content");
+            document.getElementById("homeContent").classList.remove("active-content");
+            document.getElementById("leaderboardTab").classList.add("active-tab");
+            document.getElementById("homeTab").classList.remove("active-tab");
+            fetchLeaderboard(); // Fetch leaderboard when tab is clicked
+        });
+
 async function fetchTasks() {
     const response = await fetch("https://telegram-mini-app-7nu1.onrender.com/api/tasks");
     if (response.ok) {
@@ -76,6 +105,23 @@ async function fetchTasks() {
         alert("Failed to fetch tasks!");
     }
 }
+
+
+// Fetch leaderboard and display it
+        async function fetchLeaderboard() {
+            const response = await fetch("https://telegram-mini-app-7nu1.onrender.com/api/leaderboard");
+            if (response.ok) {
+                const leaderboard = await response.json();
+                const leaderboardList = document.getElementById("leaderboardList");
+                leaderboardList.innerHTML = leaderboard.map(entry => 
+                    '<div class="leaderboard-entry">' +
+    '<p><strong>' + entry.username + '</strong> - ' + entry.points + ' points</p>' +
+'</div>'
+                ).join("");
+            } else {
+                alert("Failed to fetch leaderboard!");
+            }
+        }
 
         async function completeTask(taskId) {
     const data = {
