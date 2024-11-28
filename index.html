@@ -11,6 +11,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #f1f1f1;
         }
 
         .content {
@@ -126,12 +127,16 @@
                 const tasks = await response.json();
                 const taskList = document.getElementById("taskList");
                 taskList.innerHTML = tasks.map(task => 
-                    '<div class="task">' +
-    '<p><strong>' + task.title + '</strong> - Reward: ' + task.reward + ' points</p>' +
-    '<button ' + (task.completed ? 'disabled' : '') + ' onclick="completeTask(' + task.id + ')">' +
-        (task.completed ? 'Completed' : 'Complete Task') +
-    '</button>' +
-'</div>'
+                
+                
+                '<div class="task">' +
+                '<p><strong>' + task.title + '</strong> - Reward: ' + task.reward + ' points</p>' +
+                '<a href="' + task.url + '" target="_blank">' +
+                    '<button ' + (task.completed ? 'disabled' : '') + ' onclick="completeTask(' + task.id + ')">' +
+                        (task.completed ? 'Completed' : 'Open Task and Complete') +
+                    '</button>' +
+                '</a>' +
+            '</div>'
 
                 ).join("");
             }
