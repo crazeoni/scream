@@ -79,13 +79,41 @@
 			background-color: #007bff;
 			color: white;
 		}
+		.task {
+			border: 1px solid #ddd;
+			margin: 10px 0;
+			padding: 10px;
+			border-radius: 5px;
+			background: #f9f9f9;
+		}
+
+		.task button {
+			background: black;
+			color: white;
+			border: none;
+			padding: 8px 16px;
+			border-radius: 20px;
+			cursor: pointer;
+			font-size: 14px;
+		}
+
+		.task button:disabled {
+			background: gray;
+			cursor: not-allowed;
+		}
+
+		.task p {
+			margin: 0;
+			line-height: 1.5;
+		}
+
     </style>
 </head>
 <body>
     <!-- Tasks Page -->
     <div id="tasksPage" class="content">
         <h1>Tasks</h1>
-        <h3 id="rewardBalance">Rewards: 0 points</h3>
+        <h1 id="rewardBalance">0 SCRM</h1>
         <div id="taskList"></div>
     </div>
 
@@ -201,13 +229,18 @@
                 const taskList = document.getElementById("taskList");
                 taskList.innerHTML = tasks.map(task => 
                     '<div class="task">' +
-                        '<p><strong>' + task.title + '</strong> - Reward: ' + task.reward + ' points</p>' +
-                        '<a href="' + task.url + '" target="_blank">' +
-                            '<button ' + (task.completed ? 'disabled' : '') + ' onclick="completeTask(' + task.id + ')">' +
-                                (task.completed ? 'Completed' : 'Open Task and Complete') +
-                            '</button>' +
-                        '</a>' +
-                    '</div>'
+        '<div style="display: flex; justify-content: space-between; align-items: center;">' +
+            '<div style="flex-grow: 1;">' +
+                '<p style="margin: 0; font-weight: bold;">' + task.title + '</p>' +
+                '<p style="margin: 0; color: gray; font-size: 14px;">+' + task.reward + ' SCRM</p>' +
+            '</div>' +
+            '<a href="' + task.url + '" target="_blank" style="text-decoration: none;">' +
+                '<button style="background: black; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer;">' +
+                    (task.completed ? 'Completed' : 'Open') +
+                '</button>' +
+            '</a>' +
+        '</div>' +
+    '</div>'
                 ).join("");
             }
         }
