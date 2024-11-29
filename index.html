@@ -278,6 +278,33 @@ async function fetchLeaderboard() {
                 document.getElementById("rewardBalance").textContent = `${balance.total} SCRM`;
             }
         }
+        
+        
+        
+        // Get the referrer from the URL (if present)
+    const urlParams = new URLSearchParams(window.location.search);
+    const referrer = urlParams.get('referrer');
+
+    if (referrer) {
+        // Send the referral data to the Flask API
+        fetch("https://telegram-mini-app-7nu1.onrender.com/api/refer", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                referrer_username: referrer,
+                new_user_username: tg.initDataUnsafe.user.username
+            })
+        }).then(response => {
+            if (response.ok) {
+                alert("Referral successful! You've earned points.");
+            } else {
+                alert("Referral failed. Please try again.");
+            }
+        });
+    }
+        
 
         // Initial Load
         fetchTasks();
