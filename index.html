@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Telegram Web App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         /* General styling */
         body {
@@ -42,7 +43,7 @@
             color: #fff;
         }
 
-        /* Task & Leaderboard styling */
+        /* Task, Leaderboard, Wallet, and Friends styling */
         .task,
         .leaderboard-entry {
             border: 1px solid #ddd;
@@ -52,46 +53,84 @@
             background: #f9f9f9;
         }
 
-        .task button {
-            background: #007bff;
-            color: #fff;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .task button:disabled {
-            background: #aaa;
-        }
-
-        .leaderboard-entry {
-            display: flex;
-            justify-content: space-between;
-        }
-
         /* Hidden content */
         .hidden {
             display: none;
         }
+        
+        /* Centering for h1 elements */
+		.content h1 {
+			text-align: center;
+		}
+		.tab-bar .tab-button {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			font-size: 14px;
+		}
+
+		.tab-bar .material-icons {
+			font-size: 24px;
+			margin-bottom: 4px;
+		}
+		.tab-button.active {
+			background-color: #007bff;
+			color: white;
+		}
     </style>
 </head>
 <body>
+    <!-- Tasks Page -->
     <div id="tasksPage" class="content">
         <h1>Tasks</h1>
         <h3 id="rewardBalance">Rewards: 0 points</h3>
         <div id="taskList"></div>
     </div>
 
+    <!-- Leaderboard Page -->
     <div id="leaderboardPage" class="content hidden">
         <h1>Leaderboard</h1>
         <div id="leaderboardList"></div>
     </div>
 
-    <div class="tab-bar">
-        <div id="tasksTab" class="tab-button active">Tasks</div>
-        <div id="leaderboardTab" class="tab-button">Leaderboard</div>
+    <!-- Friends Page -->
+    <div id="friendsPage" class="content hidden">
+        <h1>Friends</h1>
+        <p>Friends</p>
     </div>
+
+    <!-- Wallet Page -->
+    <div id="walletPage" class="content hidden">
+        <h1>Wallet</h1>
+        <p>Coming Soon...</p>
+    </div>
+
+    <div class="tab-bar">
+    <!-- Home Tab -->
+    <div id="tasksTab" class="tab-button active">
+        <span class="material-icons">home</span>
+        Home
+    </div>
+    
+    <!-- Leaderboard Tab -->
+    <div id="leaderboardTab" class="tab-button">
+        <span class="material-icons">emoji_events</span>
+        Leaderboard
+    </div>
+    
+    <!-- Friends Tab -->
+    <div id="friendsTab" class="tab-button">
+        <span class="material-icons">group</span>
+        Friends
+    </div>
+    
+    <!-- Wallet Tab -->
+    <div id="walletTab" class="tab-button">
+        <span class="material-icons">account_balance_wallet</span>
+        Wallet
+    </div>
+</div>
 
     <script>
         const tg = window.Telegram.WebApp;
@@ -100,45 +139,77 @@
         // Elements
         const tasksPage = document.getElementById("tasksPage");
         const leaderboardPage = document.getElementById("leaderboardPage");
+        const friendsPage = document.getElementById("friendsPage");
+        const walletPage = document.getElementById("walletPage");
         const tasksTab = document.getElementById("tasksTab");
         const leaderboardTab = document.getElementById("leaderboardTab");
+        const friendsTab = document.getElementById("friendsTab");
+        const walletTab = document.getElementById("walletTab");
 
         // Tab Switching
         tasksTab.addEventListener("click", () => {
             tasksPage.classList.remove("hidden");
             leaderboardPage.classList.add("hidden");
+            friendsPage.classList.add("hidden");
+            walletPage.classList.add("hidden");
             tasksTab.classList.add("active");
             leaderboardTab.classList.remove("active");
+            friendsTab.classList.remove("active");
+            walletTab.classList.remove("active");
         });
 
         leaderboardTab.addEventListener("click", () => {
             leaderboardPage.classList.remove("hidden");
             tasksPage.classList.add("hidden");
+            friendsPage.classList.add("hidden");
+            walletPage.classList.add("hidden");
             leaderboardTab.classList.add("active");
             tasksTab.classList.remove("active");
-            fetchLeaderboard(); // Fetch leaderboard when tab is clicked
+            friendsTab.classList.remove("active");
+            walletTab.classList.remove("active");
+            fetchLeaderboard();
+        });
+
+        friendsTab.addEventListener("click", () => {
+            friendsPage.classList.remove("hidden");
+            tasksPage.classList.add("hidden");
+            leaderboardPage.classList.add("hidden");
+            walletPage.classList.add("hidden");
+            friendsTab.classList.add("active");
+            tasksTab.classList.remove("active");
+            leaderboardTab.classList.remove("active");
+            walletTab.classList.remove("active");
+        });
+
+        walletTab.addEventListener("click", () => {
+            walletPage.classList.remove("hidden");
+            tasksPage.classList.add("hidden");
+            leaderboardPage.classList.add("hidden");
+            friendsPage.classList.add("hidden");
+            walletTab.classList.add("active");
+            tasksTab.classList.remove("active");
+            leaderboardTab.classList.remove("active");
+            friendsTab.classList.remove("active");
         });
 
         // Fetch tasks from Flask API
-		async function fetchTasks() {
-			const response = await fetch("https://telegram-mini-app-7nu1.onrender.com/api/tasks");
-			if (response.ok) {
-				const tasks = await response.json();
-				const taskList = document.getElementById("taskList");
-				taskList.innerHTML = tasks.map(task => 
-					'<div class="task">' +
-						'<p><strong>' + task.title + '</strong> - Reward: ' + task.reward + ' points</p>' +
-						// Add the task URL as a clickable link
-						'<a href="' + task.url + '" target="_blank">' +
-							'<button ' + (task.completed ? 'disabled' : '') + ' onclick="completeTask(' + task.id + ')">' +
-								(task.completed ? 'Completed' : 'Open Task and Complete') +
-							'</button>' +
-						'</a>' +
-					'</div>'
-				).join("");
-			}
-		}
-
+        async function fetchTasks() {
+            const response = await fetch("https://telegram-mini-app-7nu1.onrender.com/api/tasks");
+            if (response.ok) {
+                const tasks = await response.json();
+                const taskList = document.getElementById("taskList");
+                taskList.innerHTML = tasks.map(task => 
+                    '<div class="task">' +
+                        '<p><strong>' + task.title + '</strong> - Reward: ' + task.reward + ' points</p>' +
+                        '<a href="' + task.url + '" target="_blank">' +
+                            '<button ' + (task.completed ? 'disabled' : '') + ' onclick="completeTask(' + task.id + ')">' +
+                                (task.completed ? 'Completed' : 'Open Task and Complete') +
+                            '</button>' +
+                        '</a>' +
+                    '</div>'
+                ).join("");
+            }
+        }
 
         // Fetch leaderboard from Flask API
         async function fetchLeaderboard() {
@@ -152,22 +223,6 @@
                         '<span>' + entry.points + ' points</span>' +
                     '</div>'
                 ).join("");
-            }
-        }
-
-        // Complete task and update the reward balance
-        async function completeTask(taskId) {
-            const data = { task_id: taskId, chat_id: tg.initDataUnsafe.user.id };
-            const response = await fetch("https://telegram-mini-app-7nu1.onrender.com/api/tasks/complete", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            });
-
-            if (response.ok) {
-                fetchTasks(); // Refresh task list
-                fetchLeaderboard(); // Update leaderboard
-                fetchRewards(); // Update reward balance after completing task
             }
         }
 
