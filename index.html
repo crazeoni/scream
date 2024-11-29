@@ -252,10 +252,12 @@
                 const leaderboard = await response.json();
                 const leaderboardList = document.getElementById("leaderboardList");
                 leaderboardList.innerHTML = leaderboard.map(entry => 
-                    '<div class="leaderboard-entry">' +
-                        '<span>' + entry.username + '</span>' +
-                        '<span>' + entry.points + ' points</span>' +
-                    '</div>'
+                    '<div class="leaderboard-entry" style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #ddd;">' +
+						'<span style="font-size: 14px; font-weight: bold; color: #333; margin-right: 10px;">' + (index + 1) + '</span>' +  // Index Counter
+						'<span style="font-size: 16px; font-weight: bold; color: #000;">' + entry.username + '</span>' +  // Username
+						'<span style="font-size: 14px; font-weight: normal; color: gray;">' + entry.points + ' SCRM</span>' +  // Points
+					'</div>'
+
                 ).join("");
             }
         }
