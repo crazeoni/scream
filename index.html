@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Telegram Web App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         /* General styling */
@@ -130,7 +131,42 @@
     <!-- Friends Page -->
     <div id="friendsPage" class="content hidden">
         <h1>Friends</h1>
-        <p>Friends</p>
+        <!-- Referral Section -->
+<div id="referralSection" style="text-align: center; padding: 20px; border: 1px solid #ddd; border-radius: 8px;" class="content hidden">
+    <h1 class="text-3xl font-semibold text-center text-gray-800 mb-4">Your Referral Link</h1>
+    <p class="text-lg text-center text-gray-600 mb-6">Share this link with your friends to earn referral rewards!</p>
+
+    <div class="flex items-center space-x-4 mb-6">
+        <input 
+            type="text" 
+            id="referralLink" 
+            value="https://crazeoni.github.io/scream?ref=username" 
+            readonly
+            class="w-full p-3 border border-gray-300 rounded-md shadow-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+        <button 
+            onclick="copyReferralLink()" 
+            class="p-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            Copy Link
+        </button>
+    </div>
+    
+    <p class="text-xl text-gray-800 mb-2">Below are your referrals:</p>
+    <ul id="referralsList" class="space-y-3">
+        <!-- Sample referral items -->
+<!--
+        <li class="flex justify-between items-center p-3 border border-gray-200 rounded-lg">
+            <span class="text-gray-800">referral_user_1</span>
+            <span class="text-sm text-gray-600">Referred 2 friends</span>
+        </li>
+        <li class="flex justify-between items-center p-3 border border-gray-200 rounded-lg">
+            <span class="text-gray-800">referral_user_2</span>
+            <span class="text-sm text-gray-600">Referred 3 friends</span>
+        </li>
+-->
+    </ul>
+</div>
+
     </div>
 
     <!-- Wallet Page -->
@@ -156,6 +192,8 @@
     <div id="friendsTab" class="tab-button">
         <span class="material-icons">group</span>
         Friends
+        
+
     </div>
     
     <!-- Wallet Tab -->
@@ -168,6 +206,9 @@
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
+        
+         // Global variable to hold the logged-in user's username
+        let currentUsername = null;
 
         // Elements
         const tasksPage = document.getElementById("tasksPage");
@@ -178,7 +219,10 @@
         const leaderboardTab = document.getElementById("leaderboardTab");
         const friendsTab = document.getElementById("friendsTab");
         const walletTab = document.getElementById("walletTab");
-
+		
+		 // Fetch the username from Telegram Web App
+        currentUsername = tg.initDataUnsafe?.user?.username || "user1"; // Default to "user1" if not found
+		
         // Tab Switching
         tasksTab.addEventListener("click", () => {
             tasksPage.classList.remove("hidden");
@@ -212,6 +256,7 @@
             tasksTab.classList.remove("active");
             leaderboardTab.classList.remove("active");
             walletTab.classList.remove("active");
+            loadReferrals(currentUsername); // Load referrals for the current user
         });
 
         walletTab.addEventListener("click", () => {
@@ -250,6 +295,54 @@
 }
 
         
+        function copyReferralLink() {
+    const referralLink = document.getElementById("referralLink");
+    referralLink.select();
+    referralLink.setSelectionRange(0, 99999); // For mobile devices
+    document.execCommand("copy");
+    alert("Referral link copied to clipboard!");
+}
+
+        
+        // After fetching the user information, display the referral section
+document.getElementById("referralSection").classList.remove("hidden");
+
+        
+        // Get the referrer username from the URL
+const urlParams = new URLSearchParams(window.location.search);
+const referrerUsername = urlParams.get("ref");
+
+// If a referrer exists, send this data along with task completion or other requests
+if (referrerUsername) {
+    // Send the referrer username with the task completion API request
+    completeTask(taskId, username, referrerUsername);
+}
+
+        
+        
+        // Function to fetch and display referrals
+function loadReferrals(username) {
+    // Fetch referrals from the API
+    fetch(`/api/referrals/${username}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.referrals) {
+                const referralList = document.getElementById("referralList");
+                referralList.innerHTML = ""; // Clear any previous data
+
+                // Add each referral to the list
+                data.referrals.forEach(referral => {
+                    const listItem = document.createElement("li");
+                    listItem.textContent = referral;
+                    referralList.appendChild(listItem);
+                });
+            } else {
+                console.error("No referrals found for this user.");
+            }
+        })
+        .catch(error => console.error("Error fetching referrals:", error));
+}
+
         
         
         // Function to mark a task as completed
@@ -281,7 +374,12 @@ async function completeTask(taskId, username) {
     }
 }
 
-        
+        // Handle tab switch
+document.getElementById("friendsTab").addEventListener("click", () => {
+    // Assuming `currentUsername` is the logged-in user's username
+    loadReferrals(currentUsername);
+});
+
         
         
 
@@ -300,6 +398,8 @@ async function fetchLeaderboard() {
                 '<span style="font-size: 16px; font-weight: bold; color: #000;">' + entry.username + '</span>' +  
                 // Points
                 '<span style="font-size: 14px; font-weight: normal; color: gray;">' + entry.points + ' SCRM</span>' +  
+                // referral
+                '<span style="font-size: 14px; font-weight: normal; color: gray;">' + entry.referrals + ' refs</span>' +  
             '</div>'
         ).join("");
     }
