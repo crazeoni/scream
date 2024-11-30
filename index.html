@@ -130,31 +130,29 @@
 
     <!-- Friends Page -->
     <div id="friendsPage" class="content hidden">
-        <h1>Friends</h1>
+        <h1 class="text-3xl font-semibold text-gray-800 mb-4">Friends</h1>
         <!-- Referral Section -->
 <div id="referralSection" style="text-align: center; padding: 20px; border: 1px solid #ddd; border-radius: 8px;" class="content hidden">
-    <h1 class="text-3xl font-semibold text-center text-gray-800 mb-4">Your Referral Link</h1>
-    <p class="text-lg text-center text-gray-600 mb-6">Share this link with your friends to earn referral rewards!</p>
-
+    <h1 class="text-3xl font-semibold text-gray-800 mb-4">Your Referral Link</h1>
+        <p class="text-lg text-gray-600 mb-6">Share this link with your friends to earn referral rewards!</p>
     <div class="flex items-center space-x-4 mb-6">
-        <input 
-            type="text" 
-            id="referralLink" 
-            value="https://crazeoni.github.io/scream?ref=username" 
-            readonly
-            class="w-full p-3 border border-gray-300 rounded-md shadow-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-        <button 
-            onclick="copyReferralLink()" 
-            class="p-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            Copy Link
-        </button>
-    </div>
-    
+    <input 
+        type="text" 
+        id="referralLink" 
+        value="https://crazeoni.github.io/scream?ref=username" 
+        readonly
+        class="w-full p-3 border border-gray-300 rounded-md shadow-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200"
+    >
+    <button 
+        onclick="copyReferralLink()" 
+        class="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+    >
+        Copy Link
+    </button>
+</div>
     <p class="text-xl text-gray-800 mb-2">Below are your referrals:</p>
     <ul id="referralsList" class="space-y-3">
         <!-- Sample referral items -->
-<!--
         <li class="flex justify-between items-center p-3 border border-gray-200 rounded-lg">
             <span class="text-gray-800">referral_user_1</span>
             <span class="text-sm text-gray-600">Referred 2 friends</span>
@@ -163,7 +161,6 @@
             <span class="text-gray-800">referral_user_2</span>
             <span class="text-sm text-gray-600">Referred 3 friends</span>
         </li>
--->
     </ul>
 </div>
 
