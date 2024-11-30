@@ -54,6 +54,9 @@
             border-radius: 5px;
             background: #f9f9f9;
         }
+        li {
+    margin-bottom: 10px;
+}
 
         /* Hidden content */
         .hidden {
@@ -118,57 +121,82 @@
     <!-- Tasks Page -->
     <div id="tasksPage" class="content">
         <h1 id="rewardBalance">0 SCRM</h1>
-        <h2>Tasks</h2>
+        <h2 style="font-weight: 300; font-size: 20px;">Tasks</h2>
         <div id="taskList"></div>
     </div>
 
     <!-- Leaderboard Page -->
     <div id="leaderboardPage" class="content hidden">
-        <h1>Leaderboard</h1>
+        <h1 style="font-weight: 300; font-size: 20px;">Leaderboard</h1>
         <div id="leaderboardList"></div>
     </div>
 
     <!-- Friends Page -->
     <div id="friendsPage" class="content hidden">
+<!--
         <h1 class="text-3xl font-semibold text-gray-800 mb-4">Friends</h1>
+-->
+        
+        
         <!-- Referral Section -->
 <div id="referralSection" style="text-align: center; padding: 20px; border: 1px solid #ddd; border-radius: 8px;" class="content hidden">
-    <h1 class="text-3xl font-semibold text-gray-800 mb-4">Your Referral Link</h1>
-        <p class="text-lg text-gray-600 mb-6">Share this link with your friends to earn referral rewards!</p>
-    <div class="flex items-center space-x-4 mb-6">
-    <input 
-        type="text" 
-        id="referralLink" 
-        value="https://crazeoni.github.io/scream?ref=username" 
-        readonly
-        class="w-full p-3 border border-gray-300 rounded-md shadow-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200"
-    >
+            <h1 style="font-weight: 300; font-size: 30px;">INVITE FRIENDS</h1>
+            <h1 style="font-weight: 300; font-size: 20px;">SHARE YOUR INVITATION LINK & EARN MORE POINTS!</h1>
+<!--
+            <input type="text" id="referralLink" value="https://crazeoni.github.io/scream?ref=username" readonly>
+            <button onclick="copyReferralLink()">Copy Link</button>
+-->
+            
+            
+
+    <!-- Share Referral Link Button at the bottom -->
     <button 
-        onclick="copyReferralLink()" 
-        class="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
-    >
-        Copy Link
-    </button>
+    onclick="openReferralDialog()" style="margin-bottom: 40px;"
+    class="w-4/5 px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 mb-4 self-center"
+>
+    Invite
+</button>
+<div style="background-color: #FAF9F6; text-align: center; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+				<p style="font-weight: bold;" style="margin-bottom: 20px;">My Referrals:</p>
+            <ul id="referralsList" style="margin-bottom: 20px;">
+				<li class="flex justify-between items-center p-3 border border-gray-200 rounded-lg">
+                <span class="text-gray-800">referral_user_1</span>
+                <span class="text-sm text-gray-600">Referred 2 friends</span>
+            </li>
+            <li class="flex justify-between items-center p-3 border border-gray-200 rounded-lg">
+                <span class="text-gray-800">referral_user_2</span>
+                <span class="text-sm text-gray-600">Referred 3 friends</span>
+            </li>
+            </ul>
+            </div>
 </div>
-    <p class="text-xl text-gray-800 mb-2">Below are your referrals:</p>
-    <ul id="referralsList" class="space-y-3">
-        <!-- Sample referral items -->
-        <li class="flex justify-between items-center p-3 border border-gray-200 rounded-lg">
-            <span class="text-gray-800">referral_user_1</span>
-            <span class="text-sm text-gray-600">Referred 2 friends</span>
-        </li>
-        <li class="flex justify-between items-center p-3 border border-gray-200 rounded-lg">
-            <span class="text-gray-800">referral_user_2</span>
-            <span class="text-sm text-gray-600">Referred 3 friends</span>
-        </li>
-    </ul>
+
+<!-- Referral Dialog (Initially Hidden) -->
+<div id="referralDialog" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
+    <div class="bg-white p-6 rounded-md shadow-md w-96">
+        <h2 class="text-xl font-semibold mb-4">Share Your Referral Link</h2>
+        <p class="text-gray-700 mb-4">You can copy your referral link or share it directly on Telegram.</p>
+        <div class="flex justify-between">
+            <button onclick="copyReferralLink()" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+                Copy Link
+            </button>
+            <button onclick="shareOnTelegram()" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                Send message
+            </button>
+        </div>
+        <button onclick="closeReferralDialog()" class="mt-4 w-full py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500">
+            Close
+        </button>
+    </div>
 </div>
+        </div>
+        
 
     </div>
 
     <!-- Wallet Page -->
     <div id="walletPage" class="content hidden">
-        <h1>Wallet</h1>
+        <h1 style="font-weight: 300; font-size: 20px;">Wallet</h1>
         <p>Coming Soon...</p>
     </div>
 
@@ -292,13 +320,36 @@
 }
 
         
-        function copyReferralLink() {
-    const referralLink = document.getElementById("referralLink");
-    referralLink.select();
-    referralLink.setSelectionRange(0, 99999); // For mobile devices
-    document.execCommand("copy");
-    alert("Referral link copied to clipboard!");
-}
+        // Open the referral dialog
+    function openReferralDialog() {
+        document.getElementById('referralDialog').classList.remove('hidden');
+    }
+
+    // Close the referral dialog
+    function closeReferralDialog() {
+        document.getElementById('referralDialog').classList.add('hidden');
+    }
+
+    // Copy the referral link to clipboard
+    function copyReferralLink() {
+        const referralLink = "https://crazeoni.github.io/scream?ref=username";
+        navigator.clipboard.writeText(referralLink)
+            .then(() => {
+                alert("Referral link copied to clipboard!");
+                closeReferralDialog(); // Close dialog after copying
+            })
+            .catch((err) => {
+                console.error("Error copying to clipboard: ", err);
+            });
+    }
+
+    // Share the referral link on Telegram
+    function shareOnTelegram() {
+        const referralLink = "https://crazeoni.github.io/scream?ref=username";
+        const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}`;
+        window.open(telegramUrl, '_blank');
+        closeReferralDialog(); // Close dialog after sharing
+    }
 
         
         // After fetching the user information, display the referral section
@@ -389,15 +440,16 @@ async function fetchLeaderboard() {
 
         leaderboardList.innerHTML = leaderboard.map((entry, index) => 
             '<div class="leaderboard-entry" style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #ddd;">' +
-                // Index Counter
-                '<span style="font-size: 14px; font-weight: bold; color: #333; margin-right: 10px;">' + (index + 1) + '</span>' +  
-                // Username
-                '<span style="font-size: 16px; font-weight: bold; color: #000;">' + entry.username + '</span>' +  
-                // Points
-                '<span style="font-size: 14px; font-weight: normal; color: gray;">' + entry.points + ' SCRM</span>' +  
-                // referral
-                '<span style="font-size: 14px; font-weight: normal; color: gray;">' + entry.referrals + ' refs</span>' +  
-            '</div>'
+            // Username and Points Section
+            '<div style="flex-grow: 1;">' +
+                '<span style="font-size: 16px; font-weight: bold; color: #000;">' + entry.username + '</span>' +
+                '<br>' +
+                '<span style="font-size: 14px; font-weight: normal; color: gray;">' + entry.points + ' SCRM</span>' +
+            '</div>' +
+            
+            // Index on the Right
+            '<span style="font-size: 14px; font-weight: bold; color: #333; margin-left: 10px;">' + (index + 1) + '</span>' +
+        '</div>'
         ).join("");
     }
 }
