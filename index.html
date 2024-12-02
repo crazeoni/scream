@@ -333,25 +333,26 @@
     }
 
     // Copy the referral link to clipboard
-    function copyReferralLink() {
-        const referralLink = `https://t.me/mid3eBot?start=${username}/${user_id}`;
-        navigator.clipboard.writeText(referralLink)
-            .then(() => {
-                alert("Referral link copied to clipboard!");
-                closeReferralDialog(); // Close dialog after copying
-            })
-            .catch((err) => {
-                console.error("Error copying to clipboard: ", err);
-            });
-    }
+function copyReferralLink() {
+    const referralLink = `https://t.me/mid3eBot?start=${currentUsername}/${tg.initDataUnsafe.user.id}`;
+    navigator.clipboard.writeText(referralLink)
+        .then(() => {
+            alert("Referral link copied to clipboard!");
+            closeReferralDialog(); // Close dialog after copying
+        })
+        .catch((err) => {
+            console.error("Error copying to clipboard: ", err);
+        });
+}
 
-    // Share the referral link on Telegram
-    function shareOnTelegram() {
-        const referralLink = `https://t.me/mid3eBot?start=${username}/${user_id}`;
-        const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}`;
-        window.open(telegramUrl, '_blank');
-        closeReferralDialog(); // Close dialog after sharing
-    }
+// Share the referral link on Telegram
+function shareOnTelegram() {
+    const referralLink = `https://t.me/mid3eBot?start=${currentUsername}/${tg.initDataUnsafe.user.id}`;
+    const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}`;
+    window.open(telegramUrl, '_blank');
+    closeReferralDialog(); // Close dialog after sharing
+}
+
 
         
         // After fetching the user information, display the referral section
