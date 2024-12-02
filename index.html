@@ -334,7 +334,7 @@
 
     // Copy the referral link to clipboard
     function copyReferralLink() {
-        const referralLink = `https://t.me/mid3eBot?start=${username}/${user_id}`;
+        const referralLink = `https://t.me/mid3eBot?start=${encodeURIComponent(username)}/${encodeURIComponent(user_id)}`;
         navigator.clipboard.writeText(referralLink)
             .then(() => {
                 alert("Referral link copied to clipboard!");
@@ -347,7 +347,7 @@
 
     // Share the referral link on Telegram
     function shareOnTelegram() {
-        const referralLink = `https://t.me/mid3eBot?start=${username}/${user_id}`;
+        const referralLink = "https://t.me/mid3eBot?start=${username}/${user_id}";
         const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}`;
         window.open(telegramUrl, '_blank');
         closeReferralDialog(); // Close dialog after sharing
