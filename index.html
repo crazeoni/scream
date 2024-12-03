@@ -447,55 +447,38 @@ document.getElementById("friendsTab").addEventListener("click", () => {
         
         
         
-        // Wallet connection functionality
-async function connectWallet() {
+        async function connectWallet() {
     try {
-        // Check if the TON Wallet is available
-        if (!window.ton) {
-            alert("TON Wallet not found. Please install or open your wallet.");
-            return;
+        if (window.ton) {
+            // Desktop browser with TON Wallet extension
+            const walletResponse = await window.ton.request({
+                method: 'ton_requestAccounts',
+            });
+            const walletAddress = walletResponse?.[0];
+            if (walletAddress) {
+                updateWalletUI(walletAddress);
+                return;
+            }
         }
 
-        // Request connection to the wallet
-        const walletResponse = await window.ton.request({
-            method: 'ton_requestAccounts',
-        });
-
-        // Get the wallet address
-        const walletAddress = walletResponse?.[0];
-
-        if (walletAddress) {
-            // Display the connected wallet address
-            const walletAddressDisplay = document.getElementById('walletAddress');
-            walletAddressDisplay.textContent = `Connected: ${walletAddress}`;
-            walletAddressDisplay.style.color = 'green';
-
-            // Hide the connect button
-            const connectWalletBtn = document.getElementById('connectWalletBtn');
-            connectWalletBtn.style.display = 'none';
-
-            // Store the wallet address for further transactions
-            localStorage.setItem('connectedWallet', walletAddress);
-        } else {
-            alert("Failed to connect wallet. Please try again.");
-        }
+        // If TON Wallet extension is not available, fallback to deep linking
+        const tonWalletDeepLink = `ton://connect`;
+        alert("Redirecting to TON Wallet...");
+        window.location.href = tonWalletDeepLink;
     } catch (error) {
         console.error("Error connecting to wallet:", error);
-        alert("Error connecting to wallet. Check console for details.");
+        alert("Error connecting to wallet. Please check the console for details.");
     }
 }
 
-// Add event listener to the "Connect Wallet" button
-document.getElementById('connectWalletBtn').addEventListener('click', connectWallet);
-
-// Check for an already connected wallet on page load
-const savedWalletAddress = localStorage.getItem('connectedWallet');
-if (savedWalletAddress) {
+function updateWalletUI(walletAddress) {
     const walletAddressDisplay = document.getElementById('walletAddress');
-    walletAddressDisplay.textContent = `Connected: ${savedWalletAddress}`;
+    walletAddressDisplay.textContent = `Connected: ${walletAddress}`;
     walletAddressDisplay.style.color = 'green';
     document.getElementById('connectWalletBtn').style.display = 'none';
+    localStorage.setItem('connectedWallet', walletAddress);
 }
+
 
 
         
