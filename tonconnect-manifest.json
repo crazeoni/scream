@@ -1,0 +1,10 @@
+{
+  "name": "TON Connect Integration App",
+  "icon": "images/ton-logo.png",
+  "url": "https://crazeoni.github.io/scream",
+  "version": "1.0",
+  "theme_color": "#000000",
+  "description": "Django-based web app for authentication and transactions with TON Connect.",
+  "permissions": ["ton_connect", "identity"],
+  "protocol": "ton-connect"
+}
