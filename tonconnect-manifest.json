@@ -16,12 +16,12 @@
 	  "iconUrl": "https://mytonwallet.com/favicon.ico"
 	},
 	{
-	  "url": "https://openton.org/",
+	  "url": "https://openton.org",
 	  "name": "The OpenTON Wallet",
 	  "iconUrl": "https://openton.org/favicon.ico"
 	},
 	{
-	  "url": "https://ton.org/",
+	  "url": "https://ton.org",
 	  "name": "TON Wallet",
 	  "iconUrl": "https://ton.org/favicon.ico"
 	},

@@ -336,6 +336,11 @@
         manifestUrl: 'https://https://crazeoni.github.io/scream/tonconnect-manifest.json',
         buttonRootId: 'ton-connect'
     });
+        import TonConnect from '@tonconnect/sdk';
+
+		const connector = new TonConnect();
+
+		connector.restoreConnection();
         
         //async function connectToWallet() {
         //const connectedWallet = await tonConnectUI.connectWallet();
