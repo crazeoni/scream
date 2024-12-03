@@ -14,11 +14,21 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f1f1f1;
+            background-color: #ffffff;
         }
 
         .content {
             padding: 20px;
+            padding-bottom: 90px; /* Adjust this value to match your tab bar height */
+			overflow-y: auto;
+			scroll-behavior: smooth;
+        }
+        
+        .content hidden {
+            padding: 20px;
+            padding-bottom: 90px; /* Adjust this value to match your tab bar height */
+			overflow-y: auto;
+			scroll-behavior: smooth;
         }
 
         /* Tab styling */
@@ -128,12 +138,12 @@
 </head>
 <body>
     <!-- Tasks Page -->
-    <div id="tasksPage" class="content" style="background-color: #f0f0f0;">
-		<div style="text-align: center; background-color: #f0f0f0;">
-			<img src="scream-mask-illustration-scary-face-icon-ghost-face-symbol-horror-movie-killer-mask-sign-scream-halloween-costume-pictogram-death-character-concept-vector.jpg" alt="Reward Icon" style="width: 100px; height: auto; margin-bottom: 20px; opacity: 0.8; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.2));" />
+    <div id="tasksPage" class="content" style="background-color: #ffffff;">
+		<div style="display: flex; justify-content: center; align-items: center; background-color: #ffffff;">
+			<img src="scream-mask-illustration-scary-face-icon-ghost-face-symbol-horror-movie-killer-mask-sign-scream-halloween-costume-pictogram-death-character-concept-vector.jpg" alt="Reward Icon" style="width: 100px; height: auto; margin-bottom: 20px; opacity: 1.0;" />
 		</div>
-        <h1 id="rewardBalance" style="margin-bottom: 40px; color: #333;">0 SCRM</h1>
-        <h2 style="font-weight: 300; font-size: 20px; color: #666;">Tasks</h2>
+        <h1 id="rewardBalance" style="margin-bottom: 40px;">0 SCRM</h1>
+        <h2 style="font-weight: 500; font-size: 20px;">Tasks</h2>
         <div id="taskList"></div>
     </div>
 
@@ -165,7 +175,7 @@
 
     <!-- Share Referral Link Button at the bottom -->
     <button 
-    onclick="openReferralDialog()" style="margin-bottom: 40px;"
+    onclick="openReferralDialog()" style="margin-bottom: 20px; margin-top: 20px;"
     class="w-full px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 mb-4 self-center"
 >
     Invite
