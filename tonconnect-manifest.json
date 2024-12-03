@@ -1,10 +1,64 @@
 {
-  "name": "TON Connect Integration App",
-  "icon": "images/ton-logo.png",
-  "url": "https://crazeoni.github.io/scream",
-  "version": "1.0",
-  "theme_color": "#000000",
-  "description": "Django-based web app for authentication and transactions with TON Connect.",
-  "permissions": ["ton_connect", "identity"],
-  "protocol": "ton-connect"
+  "wallets": [
+    {
+	  "url": "https://wallet.ton.org",
+	  "name": "Telegram Wallet",
+	  "iconUrl": "https://wallet.ton.org/favicon.ico"
+	},
+    {
+	  "url": "https://tonkeeper.com",
+	  "name": "Tonkeeper",
+	  "iconUrl": "https://tonkeeper.com/favicon.ico"
+	},
+    {
+	  "url": "https://mytonwallet.com",
+	  "name": "MyTON Wallet",
+	  "iconUrl": "https://mytonwallet.com/favicon.ico"
+	},
+	{
+	  "url": "https://openton.org/",
+	  "name": "The OpenTON Wallet",
+	  "iconUrl": "https://openton.org/favicon.ico"
+	},
+	{
+	  "url": "https://ton.org/",
+	  "name": "TON Wallet",
+	  "iconUrl": "https://ton.org/favicon.ico"
+	},
+	{
+	  "url": "https://www.bitget.com",
+	  "name": "Bitget Wallet",
+	  "iconUrl": "https://www.bitget.com/favicon.ico"
+	},
+	{
+	  "url": "https://tonhub.com",
+	  "name": "Tonhub",
+	  "iconUrl": "https://tonhub.com/favicon.ico"
+	},
+	{
+	  "url": "https://www.binance.org",
+	  "name": "Binance Wallet",
+	  "iconUrl": "https://www.binance.org/favicon.ico"
+	},
+	{
+	  "url": "https://www.bybit.com",
+	  "name": "Bybit Wallet",
+	  "iconUrl": "https://www.bybit.com/favicon.ico"
+	},
+	{
+	  "url": "https://www.okx.com",
+	  "name": "OKX Wallet",
+	  "iconUrl": "https://www.okx.com/favicon.ico"
+	},
+	{
+	  "url": "https://www.okx.com/telegram-wallet",
+	  "name": "OKX Mini Telegram Wallet",
+	  "iconUrl": "https://www.okx.com/favicon.ico"
+	},
+	{
+	  "url": "https://tobi.io",
+	  "name": "Tobi Wallet",
+	  "iconUrl": "https://tobi.io/favicon.ico"
+	}
+  ]
 }
