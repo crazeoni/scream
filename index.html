@@ -205,12 +205,24 @@
         <h1 style="font-weight: 500; font-size: 30px; color: gray;">Coming Soon...</h1>
         <!-- Wallet Page -->
        <div id="walletSection">
-        <p id="walletAddress" style="font-size: 16px; color: gray;">Not connected</p>
-        <button id="connectWalletBtn" 
-                style="margin-top: 20px; background: black; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
-            Connect Wallet
-        </button>
-    </div>
+    <p id="walletAddress" style="font-size: 16px; color: gray;">Not connected</p>
+    <button id="connectWalletBtn" 
+            style="margin-top: 20px; background: black; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;"
+            onclick="connectWallet()">
+        Connect Wallet
+    </button>
+    <p id="walletBalance" style="font-size: 16px; color: black; margin-top: 10px;">Balance: -- ETH</p>
+    
+    <div>
+    <input type="text" id="recipientAddress" placeholder="Recipient Address" />
+    <input type="number" id="tokenAmount" placeholder="Amount" />
+    <button onclick="sendTokens(document.getElementById('recipientAddress').value, document.getElementById('tokenAmount').value)">
+        Send Tokens
+    </button>
+</div>
+
+
+</div>
 
     </div>
 
@@ -408,6 +420,24 @@ function loadReferrals(username) {
 
         
         
+        async function sendTokens(recipient, amount) {
+    try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const tx = await signer.sendTransaction({
+            to: recipient,
+            value: ethers.utils.parseEther(amount.toString()),
+        });
+
+        alert(`Transaction sent! Hash: ${tx.hash}`);
+    } catch (error) {
+        console.error("Transaction failed:", error);
+        alert("Failed to send tokens.");
+    }
+}
+
+        
+        
         // Function to mark a task as completed
 async function completeTask(taskId, username) {
     try {
@@ -444,16 +474,37 @@ document.getElementById("friendsTab").addEventListener("click", () => {
 });
 
         
-        
-        
+        async function saveWalletData(username, walletAddress) {
+    try {
+        const response = await fetch("https://your-backend-api.com/saveWallet", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, walletAddress }),
+        });
+
+        if (response.ok) {
+            alert("Wallet linked successfully!");
+        } else {
+            alert("Failed to save wallet data.");
+        }
+    } catch (error) {
+        console.error("Error saving wallet data:", error);
+    }
+}
+
+        window.onload = function () {
+    const savedWallet = localStorage.getItem('connectedWallet');
+    if (savedWallet) {
+        updateWalletUI(savedWallet);
+    }
+};
+
         
         async function connectWallet() {
     try {
         if (window.ton) {
-            // Desktop browser with TON Wallet extension
-            const walletResponse = await window.ton.request({
-                method: 'ton_requestAccounts',
-            });
+            // TON Wallet detected in browser
+            const walletResponse = await window.ton.request({ method: 'ton_requestAccounts' });
             const walletAddress = walletResponse?.[0];
             if (walletAddress) {
                 updateWalletUI(walletAddress);
@@ -461,28 +512,41 @@ document.getElementById("friendsTab").addEventListener("click", () => {
             }
         }
 
-        // If TON Wallet extension is not available, fallback to deep linking
+        // Fallback for users without browser wallet extension
         const tonWalletDeepLink = `ton://connect`;
         alert("Redirecting to TON Wallet...");
         window.location.href = tonWalletDeepLink;
     } catch (error) {
         console.error("Error connecting to wallet:", error);
-        alert("Error connecting to wallet. Please check the console for details.");
+        alert("Could not connect to wallet. Check the console for more details.");
     }
 }
+
 
 function updateWalletUI(walletAddress) {
     const walletAddressDisplay = document.getElementById('walletAddress');
     walletAddressDisplay.textContent = `Connected: ${walletAddress}`;
     walletAddressDisplay.style.color = 'green';
+
+    // Hide the "Connect Wallet" button
     document.getElementById('connectWalletBtn').style.display = 'none';
+
+    // Save wallet address in local storage for future sessions
     localStorage.setItem('connectedWallet', walletAddress);
 }
 
 
 
         
-        
+        async function fetchWalletBalance(walletAddress) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const balance = await provider.getBalance(walletAddress);
+    const formattedBalance = ethers.utils.formatEther(balance);
+
+    // Display the balance
+    document.getElementById('walletBalance').textContent = `${formattedBalance} ETH`;
+}
+
         
 
         // Fetch leaderboard from Flask API
