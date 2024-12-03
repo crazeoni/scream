@@ -204,10 +204,13 @@
         <h1 style="font-weight: 500; font-size: 30px; margin-bottom: 40px;">Wallet</h1>
         <h1 style="font-weight: 500; font-size: 30px; color: gray;">Coming Soon...</h1>
         <!-- Wallet Page -->
-        <button id="connectWalletBtn" class="w-full px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200">
-        Connect Wallet
-    </button>
-    <p id="walletAddress" class="text-gray-700 mt-4 hidden"></p>
+       <div id="walletSection">
+        <p id="walletAddress" style="font-size: 16px; color: gray;">Not connected</p>
+        <button id="connectWalletBtn" 
+                style="margin-top: 20px; background: black; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+            Connect Wallet
+        </button>
+    </div>
 
     </div>
 
@@ -444,47 +447,56 @@ document.getElementById("friendsTab").addEventListener("click", () => {
         
         
         
-        // Elements
-const connectWalletBtn = document.getElementById('connectWalletBtn');
-const walletAddressElem = document.getElementById('walletAddress');
-
-// Check if MetaMask is installed
-if (typeof window.ethereum !== 'undefined') {
-    console.log('MetaMask is installed!');
-    
-    // Connect Wallet Button Event
-    connectWalletBtn.addEventListener('click', async () => {
-        try {
-            // Request account access
-            const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-            const walletAddress = accounts[0];
-            
-            // Display wallet address
-            walletAddressElem.textContent = `Connected Wallet: ${walletAddress}`;
-            walletAddressElem.classList.remove('hidden');
-
-            // Change button text
-            connectWalletBtn.textContent = 'Wallet Connected';
-            connectWalletBtn.disabled = true;
-
-            // Optionally send the wallet address to your backend for linking
-            // await fetch('/api/link-wallet', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({ username: currentUsername, wallet: walletAddress })
-            // });
-        } catch (error) {
-            console.error('Error connecting wallet:', error);
-            alert('Failed to connect wallet. Please try again.');
+        // Wallet connection functionality
+async function connectWallet() {
+    try {
+        // Check if the TON Wallet is available
+        if (!window.ton) {
+            alert("TON Wallet not found. Please install or open your wallet.");
+            return;
         }
-    });
-} else {
-    // Notify the user if MetaMask is not installed
-    connectWalletBtn.textContent = 'Install MetaMask';
-    connectWalletBtn.addEventListener('click', () => {
-        window.open('https://metamask.io/download/', '_blank');
-    });
+
+        // Request connection to the wallet
+        const walletResponse = await window.ton.request({
+            method: 'ton_requestAccounts',
+        });
+
+        // Get the wallet address
+        const walletAddress = walletResponse?.[0];
+
+        if (walletAddress) {
+            // Display the connected wallet address
+            const walletAddressDisplay = document.getElementById('walletAddress');
+            walletAddressDisplay.textContent = `Connected: ${walletAddress}`;
+            walletAddressDisplay.style.color = 'green';
+
+            // Hide the connect button
+            const connectWalletBtn = document.getElementById('connectWalletBtn');
+            connectWalletBtn.style.display = 'none';
+
+            // Store the wallet address for further transactions
+            localStorage.setItem('connectedWallet', walletAddress);
+        } else {
+            alert("Failed to connect wallet. Please try again.");
+        }
+    } catch (error) {
+        console.error("Error connecting to wallet:", error);
+        alert("Error connecting to wallet. Check console for details.");
+    }
 }
+
+// Add event listener to the "Connect Wallet" button
+document.getElementById('connectWalletBtn').addEventListener('click', connectWallet);
+
+// Check for an already connected wallet on page load
+const savedWalletAddress = localStorage.getItem('connectedWallet');
+if (savedWalletAddress) {
+    const walletAddressDisplay = document.getElementById('walletAddress');
+    walletAddressDisplay.textContent = `Connected: ${savedWalletAddress}`;
+    walletAddressDisplay.style.color = 'green';
+    document.getElementById('connectWalletBtn').style.display = 'none';
+}
+
 
         
         
