@@ -321,30 +321,69 @@
             friendsTab.classList.remove("active");
         });
 
-        async function fetchTasks() {
-    const response = await fetch("https://telegram-mini-app-7nu1.onrender.com/api/tasks");
-    if (response.ok) {
-        const tasks = await response.json();
-        const taskList = document.getElementById("taskList");
-        taskList.innerHTML = tasks.map(task => 
-            '<div class="task">' +
-            '<div style="display: flex; justify-content: space-between; align-items: center;">' +
-                '<div style="flex-grow: 1;">' +
-                    '<p style="margin: 0; font-weight: bold;">' + task.title + '</p>' +
-                    '<p style="margin: 0; color: gray; font-size: 14px;">+' + task.reward + ' SCRM</p>' +
-                '</div>' +
-                '<a href="' + task.url + '" target="_blank" style="text-decoration: none;">' +
-                    '<button style="background: black; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer;" ' +
-                        'onclick="completeTask(' + task.id + ', \'' + task.username + '\')">' + 
-                        (task.completed ? 'Completed' : 'Open') +
-                    '</button>' +
-                '</a>' +
-            '</div>' +
-            '</div>'
-        ).join("");
+        
+        
+        async function fetchTasks(chatId) {
+    try {
+        const response = await fetch(`https://telegram-mini-app-7nu1.onrender.com/api/tasks?chat_id=${chatId}`);
+        if (response.ok) {
+            const tasks = await response.json();
+            const taskList = document.getElementById("taskList");
+            taskList.innerHTML = tasks.map(task =>
+					'<div class="task">' +
+				'<div style="display: flex; justify-content: space-between; align-items: center;">' +
+					'<div style="flex-grow: 1;">' +
+						'<p style="margin: 0; font-weight: bold;">' + task.title + '</p>' +
+						'<p style="margin: 0; color: gray; font-size: 14px;">+' + task.reward + ' SCRM</p>' +
+					'</div>' +
+					'<a href="' + task.url + '" target="_blank" style="text-decoration: none;">' +
+						'<button style="background: black; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer;" ' +
+							'onclick="completeTask(' + task.id + ', \'' + task.username + '\')">' + 
+							(task.completed ? 'Completed' : 'Open') +
+						'</button>' +
+					'</a>' +
+				'</div>' +
+				'</div>'
+            ).join("");
+        } else {
+            console.error("Failed to fetch tasks:", await response.json());
+        }
+    } catch (error) {
+        console.error("Error fetching tasks:", error);
     }
 }
+        
+        
+        
+        
+        //async function fetchTasks() {
+    //const response = await fetch("https://telegram-mini-app-7nu1.onrender.com/api/tasks");
+    //if (response.ok) {
+        //const tasks = await response.json();
+        //const taskList = document.getElementById("taskList");
+        //taskList.innerHTML = tasks.map(task => 
+            //'<div class="task">' +
+            //'<div style="display: flex; justify-content: space-between; align-items: center;">' +
+                //'<div style="flex-grow: 1;">' +
+                    //'<p style="margin: 0; font-weight: bold;">' + task.title + '</p>' +
+                    //'<p style="margin: 0; color: gray; font-size: 14px;">+' + task.reward + ' SCRM</p>' +
+                //'</div>' +
+                //'<a href="' + task.url + '" target="_blank" style="text-decoration: none;">' +
+                    //'<button style="background: black; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer;" ' +
+                        //'onclick="completeTask(' + task.id + ', \'' + task.username + '\')">' + 
+                        //(task.completed ? 'Completed' : 'Open') +
+                    //'</button>' +
+                //'</a>' +
+            //'</div>' +
+            //'</div>'
+        //).join("");
+    //}
+}
 
+		
+		
+		
+		
         const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
         manifestUrl: 'https://crazeoni.github.io/scream/tonconnect-manifest.json',
         buttonRootId: 'ton-connect'
