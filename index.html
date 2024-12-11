@@ -273,6 +273,7 @@
 		
 		 // Fetch the username from Telegram Web App
         currentUsername = tg.initDataUnsafe?.user?.username || "user1"; // Default to "user1" if not found
+        
 		
         // Tab Switching
         tasksTab.addEventListener("click", () => {
@@ -322,20 +323,9 @@
         });
 
         
-        // Fetch the chatId from the API
-fetch('/api/getChatId')
-  .then(response => response.json())
-  .then(data => {
-    const chatId = data.chatId;  // Assuming the response has a 'chatId' field
-    if (chatId) {
-      fetchTasks(chatId);  // Pass chatId to fetchTasks
-    } else {
-      console.error("Chat ID is not available");
-    }
-  })
-  .catch(error => console.error('Error fetching chatId:', error));
-
         
+
+        const chatId = tg.initDataUnsafe?.user?.id; // This gives the user ID, which can act as the chat ID
         
         async function fetchTasks(chatId) {
 			if (!chatId) {
