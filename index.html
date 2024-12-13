@@ -272,8 +272,10 @@
         const walletTab = document.getElementById("walletTab");
 		
 		 // Fetch the username from Telegram Web App
-        currentUsername = tg.initDataUnsafe?.user?.username || "user1"; // Default to "user1" if not found
+        currentUsername = tg.initDataUnsafe?.user?.username; //|| "CRZNY"; // Default to "user1" if not found
+        console.log("my chatid ",currentUsername)
         const chatId = tg.initDataUnsafe?.user?.id;
+        console.log("my chatid ",chatId)
 		
         // Tab Switching
         tasksTab.addEventListener("click", () => {
