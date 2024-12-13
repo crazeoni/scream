@@ -510,7 +510,7 @@ async function completeTask(taskId, chatId, referrerUsername) {
             },
             body: JSON.stringify({
                 task_id: taskId,
-                chat_id: chatId, // Include chat_id
+                username: chatId, // Include chat_id
                 referrer_username: referrerUsername // Include referrer if applicable
             })
         });
