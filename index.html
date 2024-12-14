@@ -475,7 +475,7 @@ if (referrerId) {
         
         
         // Fetch and display referrals for the current user
-    function loadReferrals(userId) {
+    function loadReferrals(username) {
         fetch(`/api/referrals/${username}`)
             .then(response => response.json())
             .then(data => {
